@@ -10,3 +10,25 @@ pluginy:
 - Docker Pipeline
 - HTML Publisher
 - Credentials Binding
+
+komendy:
+docker exec -it jenkins-dind bash
+apt-get update
+apt-get install -y docker.io
+docker version
+
+dockerhub credentials:
+Wejdź w Jenkins → Manage Jenkins
+Kliknij Credentials
+Wybierz Stores scoped to Jenkins → (global) → Add Credentials
+Wypełnij formularz:
+    Kind: Username with password
+
+    Username: Twój Docker Hub login
+
+    Password: Twój Docker Hub Access Token
+
+    ID: docker-hub-credentials ← to musi się zgadzać z tym w Jenkinsfile
+
+    Description: np. Docker Hub token for CI/CD
+
