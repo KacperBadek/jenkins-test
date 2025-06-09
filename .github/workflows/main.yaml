@@ -25,20 +25,24 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./app
 
       - name: Run tests
         run: npm test
+        working-directory: ./app
 
       - name: Build app (optional)
         run: npm run build || echo "No build step"
+        working-directory: ./app
 
       - name: Build Docker image
         run: |
-          docker build -t hasacz325/before-test:latest .
+          docker build -t $DOCKER_USERNAME/$APP_NAME:latest ./app
 
   push-to-dockerhub:
     needs: build-and-test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repo
@@ -50,8 +54,10 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push docker image
         uses: docker/build-push-action@v6
         with:
+          context: ./app
+          file: ./app/Dockerfile
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
