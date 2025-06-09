@@ -1,0 +1,12 @@
+docker run -d ^
+  -p 8080:8080 ^
+  -v D:/jenkins_home:/var/jenkins_home ^
+  --name jenkins ^
+  jenkins/jenkins:lts
+
+
+pluginy:
+- NodeJS
+- Docker Pipeline
+- HTML Publisher
+- Credentials Binding
