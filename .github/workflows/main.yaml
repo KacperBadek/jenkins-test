@@ -24,7 +24,7 @@ jobs:
           node-version: 21
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --omit=dev
         working-directory: ./app
 
       - name: Run tests
@@ -61,3 +61,23 @@ jobs:
           file: ./app/Dockerfile
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+
+  deploy-app:
+    needs: push-to-dockerhub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use custom deploy action
+        uses: ./.github/actions/custom-deploy
+        with:
+          environment: production
+          version: 1.0.0
+          notify-team: true
+
+      - name: Show deploy outputs
+        run: |
+          echo "Deployment URL: ${{ steps.set-outputs.outputs.deployment-url }}"
+          echo "Deployment Time: ${{ steps.set-outputs.outputs.deployment-time }}"

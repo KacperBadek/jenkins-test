@@ -1,0 +1,40 @@
+name: 'Deploy Action'
+description: 'customowy deploy action'
+
+inputs:
+  environment:
+    description: "Środowisko (prod/stage)"
+    required: true
+  version:
+    description: "Wersja aplikacji"
+    required: true
+  notify-team:
+    description: "Czy powiadomić zespół"
+    required: false
+    default: 'false'
+
+
+outputs:
+  deployment-url:
+    value: ${{ steps.set-outputs.outputs.deployment-url }}
+    description: "URL do wdrożenia"
+  deployment-time:
+    value: ${{ steps.set-outputs.outputs.deployment-time }}
+    description: "Czas wdrożenia"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Deploy app
+      shell: bash
+      run: |
+        echo "Deploying version ${{ inputs.version }} to ${{ inputs.environment }}"
+        echo "https://example.com/${{ inputs.environment }}/deploy/${{ inputs.version }}" > deployment-url.txt
+        echo "$(date)" > deployment-time.txt
+
+    - name: Set outputs
+      id: set-outputs
+      shell: bash
+      run: |
+        echo "deployment-url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
+        echo "deployment-time=$(cat deployment-time.txt)" >> $GITHUB_OUTPUT
