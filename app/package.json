@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage --coverageDirectory=coverage"
   },
   "dependencies": {
     "express": "^5.1.0"

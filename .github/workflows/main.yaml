@@ -31,6 +31,22 @@ jobs:
         run: npm test
         working-directory: ./app
 
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        working-directory: ./app
+
+      - name: Archive test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./app/coverage/
+          retention-days: 7
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./app/coverage/
+
       - name: Build app (optional)
         run: npm run build || echo "No build step"
         working-directory: ./app
